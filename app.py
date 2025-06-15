@@ -13,7 +13,7 @@ st.set_page_config(
 )
 
 # Title and description
-st.title("🏙️ Digital Twin Cities for Longevity")
+st.title("Digital Twin Cities for Longevity")
 st.markdown("""
 This application simulates how urban social determinants of health (SDOH) affect aging outcomes 
 and chronic disease progression. Explore how changes in air quality, walkability, and other factors 
