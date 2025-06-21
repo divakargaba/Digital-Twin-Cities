@@ -2,7 +2,9 @@ import requests
 import pandas as pd
 from datetime import datetime
 import config
+import streamlit as st
 
+@st.cache_data
 def get_air_quality(zip_code):
     """
     Fetch current air quality data from AirNow API for a given zip code.
