@@ -11,7 +11,7 @@ import time
 # --- PAGE CONFIG ---
 st.set_page_config(
     page_title="Digital Twin Cities",
-    page_icon="🏙️",
+    page_icon="",
     layout="wide"
 )
 
@@ -48,14 +48,14 @@ def get_zip_from_coords(lat, lon):
         return None, f"Unexpected error: {e}"
 
 # --- MAIN APP ---
-st.title("🏙️ Digital Twin Cities for Longevity")
+st.title("Digital Twin Cities for Longevity")
 st.markdown("### An interactive dashboard to explore the impact of social determinants of health on aging.")
 
 # Create two columns for the map and the data
 col1, col2 = st.columns([2, 1])
 
 with col1:
-    st.subheader("📍 Interactive Map")
+    st.subheader("Interactive Map")
     
     m = folium.Map(location=st.session_state.map_center, zoom_start=12)
     
@@ -89,7 +89,7 @@ with col1:
                 st.rerun()
 
 with col2:
-    st.subheader(f"📊 Air Quality Data for ZIP: {st.session_state.zip_code}")
+    st.subheader(f"Air Quality Data for ZIP: {st.session_state.zip_code}")
     
     with st.spinner(f"Fetching data for {st.session_state.zip_code}..."):
         aq_data = get_air_quality(st.session_state.zip_code)
