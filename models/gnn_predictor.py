@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch_geometric.nn import GCNConv
+from sklearn.metrics import mean_squared_error, r2_score
 
 class GNNCityPredictor(nn.Module):
     def __init__(self, in_channels, hidden_channels, out_channels):
@@ -15,7 +16,19 @@ class GNNCityPredictor(nn.Module):
         x = self.conv2(x, edge_index)
         return x
 
-# Training utility
+def evaluate_gnn(model, data):
+    model.eval()
+    with torch.no_grad():
+        out = model(data.x, data.edge_index).squeeze()
+        y_true = data.y.cpu().numpy()
+        y_pred = out.cpu().numpy()
+
+        mse = mean_squared_error(y_true, y_pred)
+        rmse = mse ** 0.5
+        r2 = r2_score(y_true, y_pred)
+
+        print(f"GNN Evaluation:\nMSE: {mse:.4f}\nRMSE: {rmse:.4f}\nR²: {r2:.4f}")
+
 def train_gnn(model, data, epochs=100, lr=0.01):
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
     criterion = nn.MSELoss()
@@ -23,9 +36,13 @@ def train_gnn(model, data, epochs=100, lr=0.01):
     model.train()
     for epoch in range(epochs):
         optimizer.zero_grad()
-        out = model(data.x, data.edge_index)
-        loss = criterion(out.squeeze(), data.y)
+        out = model(data.x, data.edge_index).squeeze()
+        loss = criterion(out, data.y)
         loss.backward()
         optimizer.step()
+
         if epoch % 10 == 0:
             print(f"Epoch {epoch}, Loss: {loss.item():.4f}")
+
+    # Final evaluation
+    evaluate_gnn(model, data)
