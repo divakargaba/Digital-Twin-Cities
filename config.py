@@ -25,7 +25,19 @@ MODEL_PARAMS = {
     'xgboost': {
         'n_estimators': 100,
         'max_depth': 6,
-        'learning_rate': 0.1
+        'learning_rate': 0.1,
+        'random_state': 42
+    },
+    'ann': {
+        'hidden_layer_sizes': (64, 32),
+        'activation': 'relu',
+        'max_iter': 300,
+        'random_state': 42
+    },
+    'gnn': {
+        'in_channels': 16,       #set based on feature dim
+        'hidden_channels': 32,
+        'out_channels': 1        #regression: 1; Classification: # of classes
     }
 }
 
