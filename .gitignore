@@ -6,4 +6,5 @@ __pycache__/
 .env
 
 # Streamlit cache
-.streamlit/ 
+.streamlit/ .DS_Store
+data/
