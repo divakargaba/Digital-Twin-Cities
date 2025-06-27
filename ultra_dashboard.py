@@ -219,4 +219,4 @@ if not st.session_state.sdoh_data_loaded:
     st.markdown('<div class="glass-card" style="margin-top:2rem;text-align:center;">', unsafe_allow_html=True)
     st.markdown('<div class="hero-metric">Digital Twin Cities</div>', unsafe_allow_html=True)
     st.markdown('<div class="hero-desc">Load SDOH data to begin exploring the most beautiful dashboard in the world.</div>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True) 
+    st.markdown('</div>', unsafe_allow_html=True) # Force update for GitHub sync
