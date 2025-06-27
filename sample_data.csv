@@ -1,0 +1,11 @@
+city,temperature,humidity,air_quality,population,energy_consumption,traffic_density,health_index
+New York,72,65,45,8336817,1200,85,78
+Los Angeles,75,60,52,3979576,1100,80,82
+Chicago,68,70,38,2693976,950,75,75
+Houston,82,75,48,2320268,1050,70,79
+Phoenix,88,35,55,1680992,1300,65,81
+Philadelphia,70,68,42,1584064,900,78,76
+San Antonio,80,70,46,1547253,1000,68,80
+San Diego,72,65,40,1423851,950,72,84
+Dallas,78,68,44,1343573,1100,73,77
+San Jose,74,60,35,1030119,1200,60,86 

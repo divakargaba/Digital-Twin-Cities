@@ -4,6 +4,8 @@ from utils.evaluation import print_regression_metrics
 
 class RandomForestPredictor:
     def __init__(self, mode='regression', params=None):
+        if params is None:
+            params = {}
         self.mode = mode
         self.model = (RandomForestRegressor(**params) if mode == 'regression'
                       else RandomForestClassifier(**params))
