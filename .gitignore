@@ -8,3 +8,4 @@ __pycache__/
 # Streamlit cache
 .streamlit/ .DS_Store
 data/
+Non-Medical_Factor_Measures_for_Census_Tract__ACS_2017-2021_20250626.csv
