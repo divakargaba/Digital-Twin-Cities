@@ -1,33 +1,32 @@
-# Digital Twin Cities — Ultra Dashboard
+# Digital Twin Cities — Analytics & Simulation Platform
 
-A next-generation, ultra-modern analytics platform for exploring, modeling, and impacting Social Determinants of Health (SDOH) across the US. Featuring a stunning glassmorphic UI, animated charts, interactive maps, and advanced machine learning insights.
-
----
-
-## 🚀 Overview
-
-Digital Twin Cities is a visually immersive dashboard that empowers users to:
-- Explore SDOH data at the census tract level
-- Visualize and interact with geospatial health determinants
-- Run advanced ML models and see feature importance
-- Simulate policy changes and assess health impact
-- Experience a beautiful, dark, glassy, and animated interface
+Digital Twin Cities is an advanced analytics platform for modeling, analyzing, and simulating the impact of Social Determinants of Health (SDOH) across the United States at the census tract level. The project leverages large-scale, multi-source datasets and state-of-the-art machine learning to provide actionable insights for researchers, policymakers, and public health professionals.
 
 ---
 
-## ✨ Key Features
+## Overview
 
-- **Custom Top Navigation** — Smooth, beautiful tab switching (Overview, Map, Explorer, ML Insights, Impact)
-- **Glassmorphism & Gradients** — Modern, premium look throughout
-- **Full-Width Interactive Map** — Clickable, color-coded tracts with floating info panels
-- **Animated Charts** — Histograms, box plots, and correlation matrices with stunning color palettes
-- **ML Insights** — Model comparison, feature importance, and prediction accuracy
-- **Policy Impact Calculator** — Instantly see the effect of SDOH changes
-- **Responsive & Fast** — Works on all screen sizes, optimized for performance
+This platform enables users to:
+- Explore and visualize SDOH and health outcome data at a granular, neighborhood level
+- Analyze the relationships between environmental, social, and economic factors and health outcomes
+- Run and compare advanced machine learning models for health risk prediction
+- Simulate policy interventions and instantly assess projected impacts on community health
+- Integrate and process large, heterogeneous datasets from authoritative sources
 
 ---
 
-## 🛠️ Setup
+## Key Features
+
+- **Comprehensive Data Integration:** Ingests and processes data from the US Census ACS, CDC PLACES, EPA AirNow, USDA Food Access, and more
+- **Robust ML Pipeline:** Feature engineering, missing value handling, and encoding for SDOH data
+- **Multiple Predictive Models:** Includes Artificial Neural Networks (ANN), Graph Neural Networks (GNN), Random Forests, XGBoost, and custom health risk predictors
+- **Scenario Simulation:** Users can adjust SDOH variables and simulate the impact of policy changes on health risk metrics
+- **Interactive Analytics:** Visualizations, geospatial mapping, and model evaluation tools
+- **Scalable Architecture:** Designed for extensibility and integration of new data sources and models
+
+---
+
+## Setup
 
 1. **Clone the repository:**
 ```bash
@@ -41,24 +40,24 @@ pip install -r requirements.txt
 pip install streamlit-option-menu
 ```
 
-3. **Set up environment variables:**
+3. **Set up environment variables (if needed):**
 Create a `.env` file in the root directory with your API keys:
 ```
 AIRNOW_API_KEY=your_airnow_api_key
 ```
 
-4. **Run the ultra dashboard:**
+4. **Run the dashboard:**
 ```bash
 streamlit run ultra_dashboard.py
 ```
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 Digital-Twin-Cities-3/
-├── ultra_dashboard.py        # Ultra-modern glassy dashboard (recommended)
+├── ultra_dashboard.py        # Main dashboard app
 ├── app.py                   # Original Streamlit app
 ├── models/                  # ML model implementations
 ├── utils/                   # Utility functions
@@ -69,7 +68,7 @@ Digital-Twin-Cities-3/
 
 ---
 
-## 📊 Data Sources
+## Data Sources
 - EPA AirNow API: Air quality data
 - U.S. Census Bureau ACS: Socioeconomic indicators
 - CDC PLACES: Health outcome data
@@ -78,10 +77,13 @@ Digital-Twin-Cities-3/
 
 ---
 
-## 🤝 Contributing
-Contributions are welcome! Please submit a Pull Request or open an Issue.
+## Team
+- **Divakar Gaba** — Lead AI Engineer
+- **AbdulRahman Negmeldin** — Data Scientist
+- **Omar Negmeldin** — Researcher
+- **Wadi Alam** — Researcher
 
 ---
 
-## 📄 License
+## License
 MIT License — see the LICENSE file for details.
