@@ -76,8 +76,11 @@ st.sidebar.markdown("## Controls")
 st.sidebar.markdown("---")
 if 'sdoh_data_loaded' not in st.session_state:
     st.session_state.sdoh_data_loaded = False
-if st.sidebar.button("Load SDOH Data") or st.session_state.sdoh_data_loaded:
-    if not st.session_state.sdoh_data_loaded:
+if 'processor' not in st.session_state:
+    st.session_state.processor = None
+
+if not st.session_state.sdoh_data_loaded:
+    if st.sidebar.button("Load SDOH Data"):
         with st.spinner("Loading data..."):
             processor = SDOHDataProcessor("Non-Medical_Factor_Measures_for_Census_Tract__ACS_2017-2021_20250626.csv")
             processor.load_data(sample_size=50000)
@@ -87,7 +90,13 @@ if st.sidebar.button("Load SDOH Data") or st.session_state.sdoh_data_loaded:
             processor.create_target_variable(target_type='health_index')
             st.session_state.processor = processor
             st.session_state.sdoh_data_loaded = True
+        st.sidebar.success("SDOH data loaded")
+else:
     st.sidebar.success("SDOH data loaded")
+    if st.sidebar.button("Reset Data"):
+        st.session_state.sdoh_data_loaded = False
+        st.session_state.processor = None
+        st.experimental_rerun()
     states = ['All States'] + sorted(st.session_state.processor.processed_df['StateAbbr'].unique().tolist())
     selected_state = st.sidebar.selectbox("Select State", states)
     if selected_state == 'All States':
@@ -100,16 +109,13 @@ if st.sidebar.button("Load SDOH Data") or st.session_state.sdoh_data_loaded:
             pipeline.train_all_models(target_col='health_index')
             st.session_state.ml_pipeline = pipeline
         st.sidebar.success("ML pipeline complete!")
-else:
-    st.sidebar.info("Please load SDOH data.")
-    selected_state = None
 
 # --- TOP NAVIGATION BAR (streamlit-option-menu) ---
 with st.container():
     selected_tab = option_menu(
         menu_title=None,
-        options=["Overview", "Map", "Explorer", "ML Insights", "Impact"],
-        icons=["house", "map", "bar-chart", "cpu", "activity"],
+        options=["Overview", "Map", "Impact"],
+        icons=["house", "map", "activity"],
         orientation="horizontal",
         default_index=0,
         styles={
@@ -173,52 +179,6 @@ if selected_tab == "Map" and st.session_state.sdoh_data_loaded:
     st.markdown('</div>', unsafe_allow_html=True)
     st.markdown('<div class="floating-panel"><b>Click a marker for details.</b><br>Green: Good (≤25)<br>Orange: Moderate (≤50)<br>Red: Poor (>50)</div>', unsafe_allow_html=True)
 
-# --- EXPLORER SECTION ---
-if selected_tab == "Explorer" and st.session_state.sdoh_data_loaded:
-    st.markdown('<div class="glass-card" style="margin-top:2rem;">', unsafe_allow_html=True)
-    st.markdown('<h2 style="color:#fff;">SDOH Explorer</h2>', unsafe_allow_html=True)
-    df = st.session_state.processor.processed_df
-    if selected_state:
-        df = df[df['StateAbbr'] == selected_state]
-    col1, col2 = st.columns(2)
-    with col1:
-        fig1 = px.box(df, y='health_index', color_discrete_sequence=['#a78bfa'])
-        fig1.update_layout(
-            plot_bgcolor='rgba(0,0,0,0)',
-            paper_bgcolor='rgba(0,0,0,0)',
-            font_color='#e0e7ef',
-            title_text='Health Index Distribution',
-            title_font_size=18
-        )
-        st.plotly_chart(fig1, use_container_width=True)
-    with col2:
-        corr = df.corr(numeric_only=True)
-        fig2 = px.imshow(corr, color_continuous_scale='Viridis', title='Correlation Matrix')
-        fig2.update_layout(
-            plot_bgcolor='rgba(0,0,0,0)',
-            paper_bgcolor='rgba(0,0,0,0)',
-            font_color='#e0e7ef',
-            title_font_size=18
-        )
-        st.plotly_chart(fig2, use_container_width=True)
-    st.markdown('</div>', unsafe_allow_html=True)
-
-# --- ML INSIGHTS SECTION ---
-if selected_tab == "ML Insights" and st.session_state.sdoh_data_loaded and 'ml_pipeline' in st.session_state:
-    st.markdown('<div class="glass-card" style="margin-top:2rem;">', unsafe_allow_html=True)
-    st.markdown('<h2 style="color:#fff;">Machine Learning Insights</h2>', unsafe_allow_html=True)
-    pipeline = st.session_state.ml_pipeline
-    comp = pipeline.compare_models()
-    fig = px.bar(comp, x='Model', y='R²', color='R²', color_continuous_scale='Blues', title='Model R² Scores')
-    fig.update_layout(
-        plot_bgcolor='rgba(0,0,0,0)',
-        paper_bgcolor='rgba(0,0,0,0)',
-        font_color='#e0e7ef',
-        title_font_size=18
-    )
-    st.plotly_chart(fig, use_container_width=True)
-    st.markdown('</div>', unsafe_allow_html=True)
-
 # --- IMPACT SECTION ---
 if selected_tab == "Impact" and st.session_state.sdoh_data_loaded:
     st.markdown('<div class="glass-card" style="margin-top:2rem;">', unsafe_allow_html=True)
@@ -235,7 +195,23 @@ if selected_tab == "Impact" and st.session_state.sdoh_data_loaded:
     if st.button("Calculate Impact"):
         current = crowding * 0.3 + housing * 0.4 + broadband * 0.3
         new = (crowding + crowding_chg) * 0.3 + (housing + housing_chg) * 0.4 + (broadband + broadband_chg) * 0.3
-        st.success(f"Current Health Risk: {current:.1f} | Projected: {new:.1f} | Improvement: {current-new:.1f}")
+        improvement = current - new
+        color = "#16a34a" if improvement > 0 else "#f59e0b"
+        icon = "✅" if improvement > 0 else "⚠️"
+        st.markdown(f'''
+        <div style="margin:2rem auto;max-width:420px;padding:2.5rem 2rem;background:rgba(36,41,54,0.92);border-radius:22px;box-shadow:0 4px 32px #0005;text-align:center;">
+            <div style="font-size:3rem;margin-bottom:0.5rem;color:{color};">{icon}</div>
+            <h3 style="color:#fff;margin-bottom:1.2rem;">Impact Assessment</h3>
+            <div style="font-size:1.15rem;color:#cbd5e1;margin-bottom:1.2rem;">
+                <b>Current Health Risk:</b> {current:.1f}<br>
+                <b>Projected Health Risk:</b> {new:.1f}<br>
+                <b>Improvement:</b> <span style="color:{color};font-weight:700;">{improvement:.1f}</span>
+            </div>
+            <div style="margin-top:1.5rem;font-size:1.1rem;">
+                {'<span style="color:#16a34a;font-weight:600;">Positive impact projected!</span>' if improvement>0 else '<span style="color:#f59e0b;font-weight:600;">Consider adjusting your intervention.</span>'}
+            </div>
+        </div>
+        ''', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
 # --- EMPTY STATES ---
